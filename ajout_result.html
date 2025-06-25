@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FCBC - Ajouter un Résultat/Match</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Firebase SDKs (v8.10.0) - Il est préférable de les placer ici ou dans le <head> -->
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-analytics.js"></script> <!-- Optionnel -->
+
+  <header>
+    <nav>
+      <a href="index.html">Accueil</a>
+      <a href="équipe.html">Équipe</a>
+      <a href="resultat.html">Résultats</a>
+      <a href="boutique.html">Boutique</a>
+      <a href="ajout_result.html">Ajouter un Match</a> <!-- Assurez-vous que ce lien existe -->
+    </nav>
+    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSFg7Yoxn0PO5HrvjXmGZlj0xRgOUrOSw9eQA&s" alt="Logo FCBC" class="logo">
+    <h1>Ajouter un Résultat ou un Prochain Match</h1>
+  </header>
+
+  <main>
+    <section class="section">
+      <h2>Formulaire d'Ajout</h2>
+      <form id="addMatchForm" class="match-form">
+        <div class="form-group">
+          <label for="homeTeam">Équipe à domicile :</label>
+          <input type="text" id="homeTeam" name="homeTeam" required>
+        </div>
+        <div class="form-group">
+          <label for="awayTeam">Équipe extérieure :</label>
+          <input type="text" id="awayTeam" name="awayTeam" required>
+        </div>
+        <div class="form-group">
+          <label for="score">Score (si c'est un résultat, ex: 3 - 1) :</label>
+          <input type="text" id="score" name="score">
+        </div>
+        <div class="form-group">
+          <label for="date">Date :</label>
+          <input type="date" id="date" name="date" required>
+        </div>
+        <div class="form-group">
+          <label for="time">Heure (si match à venir) :</label>
+          <input type="time" id="time" name="time">
+        </div>
+        <div class="form-group">
+          <label for="location">Lieu (si match à venir) :</label>
+          <input type="text" id="location" name="location">
+        </div>
+        <div class="form-group">
+          <label for="competition">Compétition :</label>
+          <input type="text" id="competition" name="competition" required>
+        </div>
+        <button type="submit" class="button-cta">Ajouter</button>
+      </form>
+    </section>
+  </main>
+
+  <footer>
+    <p>&copy; Site non officiel du FCBC - Tous droits réservés.</p>
+  </footer>
+
+  <!-- DÉBUT DU SCRIPT POUR L'AJOUT DE RÉSULTAT (PARTIE 4 B) -->
+  <script>
+    // Votre configuration Firebase
+    const firebaseConfig = {
+      apiKey: "AIzaSyCog1TrSAQhiNKnySGOfeNR-_GZTFG0SM8",
+      authDomain: "fcbc-project.firebaseapp.com",
+      projectId: "fcbc-project",
+      storageBucket: "fcbc-project.firebasestorage.app",
+      messagingSenderId: "172058682114",
+      appId: "1:172058682114:web:296677ece165886f9a581b",
+      measurementId: "G-39WY6PTXQ2"
+    };
+
+    // Initialiser Firebase
+    // Nous utilisons la syntaxe globale 'firebase.initializeApp' car nous chargeons le SDK via <script> tags
+    const app = firebase.initializeApp(firebaseConfig);
+
+    // Initialiser Analytics (optionnel, si vous ne l'utilisez pas, vous pouvez supprimer cette ligne)
+    firebase.analytics(app);
+
+    // Initialiser Firestore
+    // Nous utilisons la syntaxe globale 'firebase.firestore()' pour obtenir l'instance de la base de données
+    const db = firebase.firestore();
+
+    // Attendre que le DOM soit complètement chargé avant d'ajouter des écouteurs d'événements
+    document.addEventListener('DOMContentLoaded', function() {
+      const addMatchForm = document.getElementById('addMatchForm');
+
+      // Vérifier si le formulaire existe avant d'ajouter l'écouteur
+      if (addMatchForm) {
+        addMatchForm.addEventListener('submit', function(event) {
+          event.preventDefault(); // Empêche l'envoi du formulaire par défaut (qui rechargerait la page)
+
+          // Récupérer les valeurs du formulaire
+          const homeTeam = document.getElementById('homeTeam').value.trim(); // .trim() pour enlever les espaces inutiles
+          const awayTeam = document.getElementById('awayTeam').value.trim();
+          const score = document.getElementById('score').value.trim();
+          const date = document.getElementById('date').value;
+          const time = document.getElementById('time').value;
+          const location = document.getElementById('location').value.trim();
+          const competition = document.getElementById('competition').value.trim();
+
+          // Valider les champs requis
+          if (!homeTeam || !awayTeam || !date || !competition) {
+            alert("Veuillez remplir tous les champs obligatoires (Équipe domicile, Équipe extérieure, Date, Compétition).");
+            return; // Arrête l'exécution si des champs sont vides
+          }
+
+          // Créer l'objet 'match' à sauvegarder
+          const matchData = {
+            homeTeam: homeTeam,
+            awayTeam: awayTeam,
+            // Si le score est vide, c'est un match à venir, sinon c'est un résultat
+            score: score === '' ? 'À venir' : score,
+            date: date,
+            time: time || '', // Si l'heure est vide, stocker une chaîne vide
+            location: location || '', // Si le lieu est vide, stocker une chaîne vide
+            competition: competition,
+            // Ajout d'un horodatage du serveur pour un tri précis et fiable
+            timestamp: firebase.firestore.FieldValue.serverTimestamp()
+          };
+
+          // Ajouter les données à la collection 'matches' dans Firestore
+          // '.add()' génère automatiquement un ID de document unique
+          db.collection('matches').add(matchData)
+            .then(() => {
+              alert('Match ajouté avec succès à la base de données !');
+              // Rediriger l'utilisateur vers la page des résultats après l'ajout
+              window.location.href = 'resultat.html';
+            })
+            .catch((error) => {
+              // Gérer les erreurs potentielles lors de l'écriture dans la base de données
+              console.error('Erreur lors de l\'ajout du match:', error);
+              alert('Une erreur est survenue lors de l\'ajout du match. Veuillez réessayer.');
+            });
+        });
+      } else {
+        console.error("Le formulaire 'addMatchForm' n'a pas été trouvé.");
+      }
+    });
+  </script>
+  <!-- FIN DU SCRIPT POUR L'AJOUT DE RÉSULTAT -->
+
+</body>
+</html>
+

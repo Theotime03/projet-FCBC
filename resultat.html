@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FCBC - Résultats</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Firebase SDKs (v8.10.0) - Placez-les ici ou dans le <head> -->
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-analytics.js"></script> <!-- Optionnel -->
+
+  <header>
+    <nav>
+      <a href="index.html">Accueil</a>
+      <a href="équipe.html">Équipe</a>
+      <a href="resultat.html">Résultats</a>
+      <a href="boutique.html">Boutique</a>
+      <a href="ajout_result.html">Ajouter un Match</a> <!-- Assurez-vous que ce lien existe -->
+    </nav>
+    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSFg7Yoxn0PO5HrvjXmGZlj0xRgOUrOSw9eQA&s" alt="Logo FCBC" class="logo">
+    <h1>Résultats du FCBC</h1>
+  </header>
+
+  <main>
+    <section class="section">
+      <h2>Derniers Résultats</h2>
+      <div class="results-list" id="dernierResultatsList">
+        <!-- Les résultats seront chargés ici depuis Firebase. -->
+        <!-- Vous pouvez laisser quelques exemples statiques ici, ou les supprimer
+             si vous voulez que TOUS les résultats viennent de la base de données.
+             Si vous les laissez, la logique JS 'prepend' ou 'appendChild' déterminera leur position. -->
+        <div class="match-card">
+          <h3>FCBC Sénior 1 vs ES Saint-Macaire</h3>
+          <p class="score">FCBC 3 - 1 ES Saint-Macaire</p>
+          <p class="date">15 Juin 2025</p>
+          <p class="competition">Championnat Départemental 1</p>
+        </div>
+        <div class="match-card">
+          <h3>FCBC U17 vs AS La Pommeraye</h3>
+          <p class="score">AS La Pommeraye 0 - 2 FCBC</p>
+          <p class="date">14 Juin 2025</p>
+          <p class="competition">Coupe des Mauges</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>Prochains Matchs</h2>
+      <div class="results-list" id="prochainsMatchsList">
+        <!-- Les prochains matchs seront chargés ici depuis Firebase. -->
+        <div class="match-card">
+          <h3>FCBC Sénior 1 vs SC Montrevault</h3>
+          <p class="date">29 Juin 2025 - 15h00</p>
+          <p class="location">Stade Municipal de Beaupréau</p>
+          <p class="competition">Match Amical</p>
+        </div>
+        <div class="match-card">
+          <h3>FCBC U15 A vs US Saint-André</h3>
+          <p class="date">05 Juillet 2025 - 10h30</p>
+          <p class="location">Terrain Annexe La Chapelle</p>
+          <p class="competition">Tournoi de Pré-saison</p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <p>&copy; Site non officiel du FCBC - Tous droits réservés.</p>
+  </footer>
+
+  <!-- DÉBUT DU SCRIPT POUR L'AFFICHAGE DES RÉSULTATS (PARTIE 4 C) -->
+  <script>
+    // Votre configuration Firebase
+    const firebaseConfig = {
+      apiKey: "AIzaSyCog1TrSAQhiNKnySGOfeNR-_GZTFG0SM8",
+      authDomain: "fcbc-project.firebaseapp.com",
+      projectId: "fcbc-project",
+      storageBucket: "fcbc-project.firebasestorage.app",
+      messagingSenderId: "172058682114",
+      appId: "1:172058682114:web:296677ece165886f9a581b",
+      measurementId: "G-39WY6PTXQ2"
+    };
+
+    // Initialiser Firebase
+    const app = firebase.initializeApp(firebaseConfig);
+
+    // Initialiser Analytics (optionnel)
+    firebase.analytics(app);
+
+    // Initialiser Firestore
+    const db = firebase.firestore();
+
+    // Attendre que le DOM soit complètement chargé
+    document.addEventListener('DOMContentLoaded', function() {
+      const dernierResultatsList = document.getElementById('dernierResultatsList');
+      const prochainsMatchsList = document.getElementById('prochainsMatchsList');
+
+      // Nettoyer le contenu statique existant des listes.
+      // Cela garantit que seuls les matchs récupérés de Firebase sont affichés.
+      // Si vous voulez garder les matchs statiques ET ajouter ceux de Firebase,
+      // commentez ou supprimez les lignes suivantes.
+      if (dernierResultatsList) {
+        // Supprimer tous les enfants sauf les 4 premiers (si vous avez des exemples statiques)
+        // Ou simplement dernierResultatsList.innerHTML = '' pour tout vider
+        while (dernierResultatsList.children.length > 0) {
+            dernierResultatsList.removeChild(dernierResultatsList.lastChild);
+        }
+      }
+      if (prochainsMatchsList) {
+        // Supprimer tous les enfants sauf les 4 premiers (si vous avez des exemples statiques)
+        // Ou simplement prochainsMatchsList.innerHTML = '' pour tout vider
+        while (prochainsMatchsList.children.length > 0) {
+            prochainsMatchsList.removeChild(prochainsMatchsList.lastChild);
+        }
+      }
+
+
+      // Récupérer les matchs depuis la collection 'matches' de Firestore
+      // Tri par date pour s'assurer que les matchs sont dans l'ordre chronologique.
+      // 'asc' pour ordre croissant (les plus anciens d'abord).
+      db.collection('matches').orderBy('date', 'asc').get()
+        .then((querySnapshot) => {
+          const matches = [];
+          // Parcourir chaque document (match) retourné par la requête
+          querySnapshot.forEach((doc) => {
+            matches.push(doc.data()); // Ajouter les données du document au tableau
+          });
+
+          const today = new Date();
+          // Mettre l'heure à 00:00:00 pour comparer uniquement les dates
+          today.setHours(0, 0, 0, 0);
+
+          // Parcourir tous les matchs récupérés
+          matches.forEach(match => {
+            const matchDate = new Date(match.date);
+            matchDate.setHours(0, 0, 0, 0); // Mettre l'heure à 00:00:00 pour comparaison
+
+            // Créer un nouvel élément div pour la carte de match
+            const matchCard = document.createElement('div');
+            matchCard.classList.add('match-card');
+
+            // Construire le contenu HTML de la carte de match
+            let content = `
+              <h3>${match.homeTeam} vs ${match.awayTeam}</h3>
+            `;
+
+            // Si c'est un résultat (score défini et non 'À venir')
+            if (match.score && match.score !== 'À venir') {
+              content += `<p class="score">FCBC ${match.score} ${match.awayTeam}</p>`; // Correction pour afficher "FCBC" dans le score
+            }
+
+            // Afficher la date
+            content += `<p class="date">${new Date(match.date).toLocaleDateString('fr-FR', { year: 'numeric', month: 'long', day: 'numeric' })}`;
+            // Si l'heure est disponible, l'ajouter
+            if (match.time) {
+              content += ` - ${match.time}`;
+            }
+            content += `</p>`;
+
+            // Si le lieu est disponible, l'ajouter
+            if (match.location) {
+              content += `<p class="location">${match.location}</p>`;
+            }
+            // Afficher la compétition
+            content += `<p class="competition">${match.competition}</p>`;
+
+            // Insérer le contenu HTML dans la carte de match
+            matchCard.innerHTML = content;
+
+            // Décider si le match est un "Dernier Résultat" ou un "Prochain Match"
+            // Un match est considéré comme un "Dernier Résultat" s'il a un score ou si sa date est passée
+            if (match.score && match.score !== 'À venir' || matchDate < today) {
+              // Ajoute au début de la liste des derniers résultats pour avoir les plus récents en haut
+              if (dernierResultatsList) dernierResultatsList.prepend(matchCard);
+            } else {
+              // Ajoute à la fin de la liste des prochains matchs
+              if (prochainsMatchsList) prochainsMatchsList.appendChild(matchCard);
+            }
+          });
+        })
+        .catch((error) => {
+          // Gérer les erreurs lors de la récupération des données
+          console.error('Erreur lors de la récupération des matchs:', error);
+          if (dernierResultatsList) dernierResultatsList.innerHTML = '<p>Impossible de charger les derniers résultats.</p>';
+          if (prochainsMatchsList) prochainsMatchsList.innerHTML = '<p>Impossible de charger les prochains matchs.</p>';
+        });
+    });
+  </script>
+  <!-- FIN DU SCRIPT POUR L'AFFICHAGE DES RÉSULTATS -->
+
+</body>
+</html>

@@ -1,0 +1,424 @@
+/* RESET DE BASE */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* Police principale */
+  background: linear-gradient(to bottom, #025afc, #FFB550); /* Dégradé de fond */
+  color: #000000;
+  line-height: 1.6;
+}
+
+/* HEADER */
+header {
+  background-color: #003366;
+  color: rgb(0, 0, 0); /* Ce sera écrasé par la couleur du nav a */
+  padding: 2rem;
+  box-shadow: 0 4px 8px rgba(0,0,0,0);
+}
+
+header h1 {
+  font-size: 2.5rem;
+  color: rgb(252, 248, 2); /* Couleur jaune pour le titre du header */
+  text-align: center;
+}
+
+/* Navigation */
+nav {
+  text-align: center; /* Centre les liens de navigation */
+  margin-bottom: 20px; /* Espace sous la nav */
+}
+
+nav a {
+  color: white;
+  margin: 0 10px;
+  text-decoration: none;
+}
+
+nav a:hover {
+  text-decoration: underline;
+}
+
+/* Logo dans le header */
+.logo {
+  width: 100px;
+  height: auto;
+  margin: 20px auto 0;
+  display: block;
+}
+
+/* SECTION GÉNÉRALE */
+.section {
+  background-color: #ffffff;
+  border-radius: 12px;
+  padding: 20px;
+  margin: 30px auto;
+  max-width: 1500px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.section h2 {
+  color: #003366;
+  margin-bottom: 15px;
+  text-align: center;
+}
+
+.section p {
+  font-size: 1.1rem;
+  line-height: 1.7;
+  color: #333;
+}
+
+/* IMAGES GÉNÉRALES */
+img {
+  display: block;
+  margin: auto;
+  margin-bottom: 10px;
+}
+
+/* LISTES GÉNÉRALES (si utilisées hors sections spécifiques) */
+ul {
+  list-style-type: square;
+  padding-left: 20px;
+}
+
+li {
+  margin-bottom: 8px;
+  font-weight: bold;
+}
+
+
+/* SECTION PRINCIPALE DES ÉQUIPES */
+.teams {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 2rem;
+  padding: 3rem;
+  max-width: 1500px;
+  margin: auto;
+}
+
+/* CARTE ÉQUIPE */
+.team {
+  background: #fff;
+  border-radius: 1rem;
+  padding: 1.5rem;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.1); /* Légère ombre pour le relief */
+  text-align: center;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.team:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.2); /* Ombre plus prononcée au survol */
+}
+
+.team h2 {
+  font-size: 1.4rem;
+  margin-bottom: 1rem;
+  color: #003366;
+}
+
+.team img {
+  max-width: 100%;
+  height: 180px;
+  object-fit: cover;
+  border-radius: 0.75rem;
+  border: 2px solid #ccc;
+  margin-bottom: 0; /* Écrase le margin-bottom général de img si besoin */
+}
+
+/* Styles pour la Section Héro (Accueil) */
+.hero-section {
+  background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('https://upload.wikimedia.org/wikipedia/commons/thumb/e/e4/Football_stadium.jpg/1200px-Football_stadium.jpg') no-repeat center center/cover;
+  color: white;
+  text-align: center;
+  padding: 80px 20px;
+  margin-top: -20px; /* Remonte un peu pour coller au header */
+  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+}
+
+.hero-content h2 {
+  font-size: 3rem;
+  margin-bottom: 15px;
+  color: #fff;
+  text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+}
+
+.hero-content p {
+  font-size: 1.3rem;
+  margin-bottom: 30px;
+  color: #f0f0f0;
+}
+
+.button-cta {
+  display: inline-block;
+  background-color: #FFB550; /* Couleur orange de votre thème */
+  color: #003366;
+  padding: 15px 30px;
+  border-radius: 50px;
+  text-decoration: none;
+  font-weight: bold;
+  font-size: 1.1rem;
+  transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+.button-cta:hover {
+  background-color: #e6a245;
+  transform: translateY(-3px);
+}
+
+
+/* Styles pour la section Événements (Accueil) */
+.events-section .event-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 20px;
+}
+
+.event-card {
+  background-color: #e6e6e6;
+  border-radius: 10px;
+  padding: 20px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  text-align: center; /* Centre le contenu des cartes d'événements */
+}
+
+.event-card img {
+  max-width: 100%;
+  height: 200px; /* Hauteur fixe pour les images des événements */
+  object-fit: cover; /* Assure que l'image couvre l'espace sans déformation */
+  border-radius: 8px;
+  margin-bottom: 15px; /* Espace sous l'image */
+}
+
+
+.event-card h3 {
+  color: #003366;
+  margin-bottom: 10px;
+}
+
+.event-card p {
+  font-size: 1rem;
+  color: #555;
+}
+
+/* Styles pour la section Partenaires (Accueil) */
+.partners-section {
+  text-align: center;
+}
+
+.partners-logos {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 30px;
+  margin-top: 20px;
+}
+
+.partners-logos img {
+  max-width: 150px;
+  height: auto;
+  /* Retiré les filtres de base pour que les images soient en couleur */
+  opacity: 0.8; /* Légèrement transparentes par défaut */
+  transition: all 0.3s ease;
+}
+
+.partners-logos img:hover {
+  filter: grayscale(0%); /* Couleurs au survol */
+  opacity: 1;
+}
+
+/* ACTUALITÉS FOOT (iframe) */
+#actus {
+  background-color: #fff;
+  border-radius: 10px;
+  padding: 20px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+  margin-top: 30px;
+}
+
+#actus h2 {
+  color: #003366;
+  margin-bottom: 15px;
+  text-align: center;
+}
+
+#iframe { /* Ce style était vide, j'ai supposé qu'il était pour l'iframe elle-même */
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.small-text { /* Texte petit pour les sources iframe */
+  font-size: 0.8rem;
+  color: #666;
+  text-align: right;
+  margin-top: 10px;
+}
+
+
+/* Styles pour la page des Résultats */
+.results-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 20px;
+  margin-top: 20px;
+}
+
+.match-card {
+  background-color: #e6e6e6;
+  border-radius: 10px;
+  padding: 15px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  text-align: center;
+}
+
+.match-card h3 {
+  color: #003366;
+  margin-bottom: 10px;
+  font-size: 1.3rem;
+}
+
+.match-card .score {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #125d9e;
+  margin-bottom: 5px;
+}
+
+.match-card .date,
+.match-card .location,
+.match-card .competition {
+  font-size: 0.95rem;
+  color: #555;
+  margin-bottom: 3px;
+}
+
+/* FOOTER */
+footer {
+  text-align: center;
+  padding: 1.5rem;
+  background-color: #003366;
+  color: white;
+  margin-top: 2rem;
+}
+
+footer p {
+  color: white; /* Assurez-vous que le texte du footer est blanc pour la lisibilité */
+  margin-bottom: 5px; /* Ajusté pour une meilleure consistance */
+}
+
+/* Nouveaux styles pour la Boutique du Club */
+.product-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 30px;
+  margin-top: 20px;
+  justify-content: center; /* Centre les cartes horizontalement */
+}
+
+.product-card {
+  background-color: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  text-align: center;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.product-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+}
+
+.product-card img {
+  max-width: 100%;
+  height: 200px;
+  object-fit: cover;
+  border-radius: 8px;
+  margin-bottom: 15px;
+}
+
+.product-card h3 {
+  color: #003366;
+  font-size: 1.4rem;
+  margin-bottom: 10px;
+}
+
+.product-card .price {
+  font-size: 1.6rem;
+  font-weight: bold;
+  color: #FFB550; /* Couleur orange */
+  margin-bottom: 15px;
+}
+
+.product-card p {
+  font-size: 0.95rem;
+  color: #666;
+  margin-bottom: 20px;
+  line-height: 1.5;
+}
+
+.product-card .add-to-cart {
+  background-color: #003366; /* Couleur bleue foncée */
+  color: white;
+  padding: 12px 25px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 1rem;
+  font-weight: bold;
+  transition: background-color 0.3s ease;
+}
+
+.product-card .add-to-cart:hover {
+  background-color: #004488;
+}
+/* Styles pour le formulaire d'ajout */
+.match-form {
+  max-width: 600px;
+  margin: 20px auto;
+  padding: 30px;
+  background-color: #f9f9f9;
+  border-radius: 12px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.form-group {
+  margin-bottom: 20px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: bold;
+  color: #003366;
+}
+
+.form-group input[type="text"],
+.form-group input[type="date"],
+.form-group input[type="time"] {
+  width: calc(100% - 20px); /* Ajuste la largeur pour le padding */
+  padding: 12px 10px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  font-size: 1rem;
+}
+
+.form-group input[type="text"]:focus,
+.form-group input[type="date"]:focus,
+.form-group input[type="time"]:focus {
+  border-color: #FFB550;
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(255, 181, 80, 0.2);
+}
+
+.button-cta {
+  width: 100%;
+  padding: 15px;
+  font-size: 1.2rem;
+  margin-top: 20px;
+}
