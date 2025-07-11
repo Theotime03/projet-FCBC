@@ -8,10 +8,10 @@
 </head>
 <body>
 
-
+  <!-- Firebase SDKs (v8.10.0) - Il est préférable de les placer ici ou dans le <head> -->
   <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
   <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-analytics.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-analytics.js"></script> <!-- Optionnel -->
 
   <header>
     <nav>
@@ -19,7 +19,7 @@
       <a href="équipe.html">Équipe</a>
       <a href="resultat.html">Résultats</a>
       <a href="boutique.html">Boutique</a>
-      <a href="ajout_result.html">Ajouter un Match</a> 
+      <a href="ajout_result.html">Ajouter un Match</a>
     </nav>
     <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSFg7Yoxn0PO5HrvjXmGZlj0xRgOUrOSw9eQA&s" alt="Logo FCBC" class="logo">
     <h1>Ajouter un Résultat ou un Prochain Match</h1>
@@ -32,7 +32,7 @@
         <div class="form-group">
           <label for="homeTeam">Équipe à domicile + niveau(ex : Sénior 2) :</label>
           <input type="text" id="homeTeam" name="homeTeam" required>
-
+        </div> <!-- BALISE DIV MANQUANTE AJOUTÉE ICI -->
         <div class="form-group">
           <label for="awayTeam">Équipe extérieure + niveau :</label>
           <input type="text" id="awayTeam" name="awayTeam" required>
@@ -66,9 +66,8 @@
     <p>&copy; Site non officiel du FCBC - Tous droits réservés.</p>
   </footer>
 
- 
   <script>
-
+    // Votre configuration Firebase
     const firebaseConfig = {
       apiKey: "AIzaSyCog1TrSAQhiNKnySGOfeNR-_GZTFG0SM8",
       authDomain: "fcbc-project.firebaseapp.com",
@@ -79,25 +78,25 @@
       measurementId: "G-39WY6PTXQ2"
     };
 
-
+    // Initialiser Firebase
     const app = firebase.initializeApp(firebaseConfig);
 
-
+    // Initialiser Analytics (optionnel, si vous ne l'utilisez pas, vous pouvez supprimer cette ligne)
     firebase.analytics(app);
 
-
+    // Initialiser Firestore
     const db = firebase.firestore();
 
-
+    // Attendre que le DOM soit complètement chargé avant d'ajouter des écouteurs d'événements
     document.addEventListener('DOMContentLoaded', function() {
       const addMatchForm = document.getElementById('addMatchForm');
 
-  
+      // Vérifier si le formulaire existe avant d'ajouter l'écouteur
       if (addMatchForm) {
         addMatchForm.addEventListener('submit', function(event) {
-          event.preventDefault(); 
+          event.preventDefault();
 
-
+          // Récupérer les valeurs du formulaire
           const homeTeam = document.getElementById('homeTeam').value.trim();
           const awayTeam = document.getElementById('awayTeam').value.trim();
           const score = document.getElementById('score').value.trim();
@@ -106,10 +105,10 @@
           const location = document.getElementById('location').value.trim();
           const competition = document.getElementById('competition').value.trim();
 
-
+          // Valider les champs requis
           if (!homeTeam || !awayTeam || !date || !competition) {
             alert("Veuillez remplir tous les champs obligatoires (Équipe domicile, Équipe extérieure, Date, Compétition).");
-            return; /
+            return;
           }
 
           const matchData = {
@@ -117,7 +116,7 @@
             awayTeam: awayTeam,
             score: score === '' ? 'À venir' : score,
             date: date,
-            time: time || '', 
+            time: time || '',
             location: location || '',
             competition: competition,
             timestamp: firebase.firestore.FieldValue.serverTimestamp()
@@ -126,11 +125,9 @@
           db.collection('matches').add(matchData)
             .then(() => {
               alert('Match ajouté avec succès à la base de données !');
-
               window.location.href = 'resultat.html';
             })
             .catch((error) => {
-
               console.error('Erreur lors de l\'ajout du match:', error);
               alert('Une erreur est survenue lors de l\'ajout du match. Veuillez réessayer.');
             });
@@ -141,7 +138,5 @@
     });
   </script>
 
-
 </body>
 </html>
-
